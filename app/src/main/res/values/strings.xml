@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Intranet</string>
+    <string name="title_timetable">Skema</string>
+    <string name="title_scan">Scan</string>
+    <string name="title_overview">Oversigt</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
