@@ -200,7 +200,7 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
         try {
 
             if (tag == null) {
-                Log.i(TAG, "writeNdefMessage: Tag object cannot be null");
+                Log.i(TAG, "writeNdefMessage:Tag object cannot be null");
                 return;
             }
 
