@@ -10,9 +10,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.fahadali.intranet.R;
-import com.fahadali.intranet.model.Course;
+import com.fahadali.intranet.model.Subject;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -21,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder> {
 
     private static final String TAG = "ScheduleAdapter";
-    private ArrayList<Course> courses;
+    private ArrayList<Subject> courses;
     private Context context;
 
     public ScheduleAdapter(Context context) {
@@ -36,9 +35,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
                 note = "Note omkring kursus "+(i+1);
 
             }
-            courses.add(new Course(
-                    (i+1)+"0:00",
-                    (i+2)+"0:00",
+            courses.add(new Subject(
+                    i+1,
                     "Titel"+(i+1),
                     note
                     ));
@@ -59,11 +57,9 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: called");
 
-        String startTime = courses.get(position).getStartTime();
-        String endTime = courses.get(position).getEndTime();
-        String title = courses.get(position).getCourseTitle();
-        String note = courses.get(position).getCourseNote();
-        holder.courseTiming.setText(String.format("%s - %s", startTime, endTime));
+        String title = courses.get(position).getTitle();
+        String note = courses.get(position).getNote();
+        holder.courseTiming.setText(String.format("%s - %s", "10:00", "11:00"));
         holder.courseTitle.setText(title);
 
 

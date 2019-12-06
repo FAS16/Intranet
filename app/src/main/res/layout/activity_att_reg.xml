@@ -6,9 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".activities.AttendanceRegistrationActivity"
     android:gravity="center"
-    style="@style/Theme.Design.Light.NoActionBar"
+    style="@style/Theme.Design.Light"
     android:orientation="vertical"
-    android:background="@color/colorPrimary">
+    >
 
 
     <TextView
@@ -18,7 +18,7 @@
         android:fontFamily="@font/open_sans"
         android:text="Læs lokalets chip"
         android:textSize="24dp"
-        android:layout_marginBottom="10dp"></TextView>
+        android:layout_marginBottom="30dp"></TextView>
 
 
     <ImageView
@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:SpinKit_Color="@color/white"
+        app:SpinKit_Color="@android:color/darker_gray"
         android:layout_marginBottom="10dp"/>
 
 
@@ -62,9 +62,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Luk"
-        android:backgroundTint="@color/white"
-        android:textColor="@color/colorPrimary"
-        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:layout_marginBottom="20dp"
         ></Button>
 
 

@@ -1,7 +1,6 @@
 package com.fahadali.intranet.ui.schedule;
 
 
-import android.media.DrmInitData;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.fahadali.intranet.R;
-import com.fahadali.intranet.model.Course;
+import com.fahadali.intranet.model.Subject;
 
 import java.util.ArrayList;
 
@@ -27,7 +26,7 @@ public class DayScheduleFragment extends Fragment {
 
     private static final String TAG = "DayScheduleFragment";
 
-    private ArrayList<Course> courses;
+    private ArrayList<Subject> courses;
     private View root;
 
 

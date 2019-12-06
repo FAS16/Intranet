@@ -1,9 +1,12 @@
 package com.fahadali.intranet.activities;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -14,6 +17,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,10 +46,12 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
+
         setContentView(R.layout.activity_att_reg);
         Log.d(TAG, "onCreate: called...");
-
-
 
         // Back button
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
