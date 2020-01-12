@@ -1,12 +1,14 @@
 package com.fahadali.intranet.activities;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import android.Manifest;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.pm.PackageManager;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -17,63 +19,77 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fahadali.intranet.R;
+import com.fahadali.intranet.model.Attendance;
+import com.fahadali.intranet.model.Student;
+import com.fahadali.intranet.model.Token;
+import com.fahadali.intranet.other.App;
 import com.github.ybq.android.spinkit.SpinKitView;
+import android.telephony.TelephonyManager;
+
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+;
+
 
 public class AttendanceRegistrationActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "AttendanceRegActivity";
 
-//    private ToggleButton readWriteButton;
-    private SpinKitView spinKit;
+    //    private ToggleButton readWriteButton;
+    private SpinKitView spinKitBeforeCheckIn;
     private ImageView checkMark;
+    private ImageView afterScanMark;
+    private ImageView crossMark;
     private NfcAdapter nfcAdapter;
-    private TextView tagContent;
+    private TextView tagContentTextView;
     private TextView readNotification;
-    private TextView readChipText;
-    private Button closeButton;
+    private TextView infoText;
+    private Button postBtn;
     private boolean correctClassRoom;
     private boolean read;
+    private String tagId;
+    private int lessonId;
+    private String roomId;
+    private int checkType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-
         setContentView(R.layout.activity_att_reg);
         Log.d(TAG, "onCreate: called...");
-
-        // Back button
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("");
-        //Set color of Action Bar
-//        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
 
-
-        //readWriteButton = findViewById(R.id.readWriteButton);
-//        readWriteButton.setOnClickListener(this);
-        tagContent = findViewById(R.id.tagContentTextView);
-        spinKit = findViewById(R.id.spin_kit);
+        tagContentTextView = findViewById(R.id.tagContentTextView);
+        spinKitBeforeCheckIn = findViewById(R.id.spin_kit);
         checkMark = findViewById(R.id.checkMark);
+        afterScanMark = findViewById(R.id.afterScanMark);
+        crossMark = findViewById(R.id.crossMark);
         readNotification = findViewById(R.id.readNotification);
-        readChipText = findViewById(R.id.readChipText);
-        closeButton = findViewById(R.id.closeDialog);
-        closeButton.setOnClickListener(this);
-
-
+        infoText = findViewById(R.id.readChipText);
+        postBtn = findViewById(R.id.checkInBtn);
+        postBtn.setOnClickListener(this);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         checkNfcAvailablity(nfcAdapter);
+
+        lessonId = getIntent().getExtras().getInt("lessonId");
+        roomId = getIntent().getExtras().getString("roomId");
+        checkType = getCheckType(lessonId);
+
+        if(checkType == -1) {
+            App.longToast(this, "Du har allerede registreret for denne lektion");
+            finish();
+        }
 
 
     }
@@ -89,49 +105,71 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
         if (nfcAdapter != null && nfcAdapter.isEnabled()) {
             Log.i(TAG, "checkNfcAvailablity: NFC is available!");
         } else {
+            App.longToast(this, "Slå venligst NFC til i telefonens indstillinger");
             finish();
         }
 
     }
+
+    public static String byteArrayToHex(byte[] a) {
+        StringBuilder sb = new StringBuilder(a.length * 2);
+        for (byte b : a)
+            sb.append(String.format("%02x", b));
+        return sb.toString();
+    }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Log.d(TAG, "onNewIntent: NFC intent recieved!");
 
-        if(!read && !correctClassRoom) {
+        if (!read) {
+            if (intent.hasExtra(NfcAdapter.EXTRA_TAG)) {
+                Log.i(TAG, "onNewIntent: Intent has EXTRA_TAG!");
 
+                Parcelable[] parcelables =
+                        intent
+                        .getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 
-
-        if (intent.hasExtra(NfcAdapter.EXTRA_TAG)) {
-            Log.i(TAG, "onNewIntent: Intent has EXTRA_TAG!");
-            /*if (readWriteButton.isChecked()) {*/
-
-                //READ
-                Parcelable[] parcelables = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
                 if (parcelables != null && parcelables.length > 0) {
 
+                    Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                    tagId = byteArrayToHex(tag.getId());
+                    Log.i(TAG, "onNewIntent: tagId = " + tagId);
                     readTextFromTag((NdefMessage) parcelables[0]);
                     read = true;
 
+                    validateRoom(tagId, roomId);
+                    if (tagId.equals(roomId)) {
+                        showCorrectRoomUi();
+                    } else {
+                        // User is at the wrong room
+                        showWrongRoomUi("Du skal ikke være her", "");
+                    }
 
                 } else {
                     Log.i(TAG, "onNewIntent: No NDEF messages found...");
                 }
-
-            /*} else {
-
-                //WRITE
-                Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                NdefMessage ndefMessage = createNdefMessage(tagContent.getText().toString());
-                writeNdefMessage(tag, ndefMessage);
-
-            }*/
-
-
-        }
+            }
         }
     }
+
+    private void showWrongRoomUi(String header, String text) {
+
+        afterScanMark.setVisibility(View.GONE);
+        this.spinKitBeforeCheckIn.setVisibility(View.GONE);
+        this.infoText.setText(header);
+        if (!text.isEmpty()) {
+            this.tagContentTextView.setText(text);
+        }
+        crossMark.setVisibility(View.VISIBLE);
+        postBtn.setVisibility(View.GONE);
+    }
+
+    private void validateRoom(String tagId, String roomId) {
+    }
+
 
     private void readTextFromTag(NdefMessage ndefMessage) {
 
@@ -143,7 +181,7 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
 
             String content = getTextFromNdefRecord(ndefRecord);
 
-            this.tagContent.setText(content);
+            this.tagContentTextView.setText("Lokale " + content);
 
         } else {
             Log.i(TAG, "readTextFromTag: No NDEF records found...");
@@ -197,7 +235,7 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
             Log.i(TAG, "formatTag: SUCCESS: Tag formatted!");
 
         } catch (Exception e) {
-            Log.e(TAG, "formatTag: "+e.getMessage());
+            Log.e(TAG, "formatTag: " + e.getMessage());
 
         }
 
@@ -231,7 +269,7 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
             }
 
         } catch (Exception e) {
-            Log.e(TAG, "writeNdefMessage: "+e.getMessage());
+            Log.e(TAG, "writeNdefMessage: " + e.getMessage());
         }
     }
 
@@ -256,7 +294,6 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
             tagContent = new String(payload, languageSize + 1,
                     payload.length - languageSize - 1, textEncoding).trim();
 
-            ChangeUiWhenRead();
 
             Log.i(TAG, "getTextFromNdefRecord: SUCCESS: Tag read! Content: (" + tagContent + ")");
         } catch (UnsupportedEncodingException e) {
@@ -265,24 +302,168 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
         return tagContent;
     }
 
-    private void ChangeUiWhenRead() {
-        this.spinKit.setVisibility(View.GONE);
-        this.checkMark.setVisibility(View.VISIBLE);
-        this.readNotification.setText("Din deltagelse er registeret.\nHusk at scanne på vej ud.");
-        this.readChipText.setText("Velkommen!");
+    private void showCorrectRoomUi() {
+        this.spinKitBeforeCheckIn.setVisibility(View.GONE);
+        if(checkType == 0) {
+            this.postBtn.setText("Check ind");
+            this.infoText.setText("Velkommen!");
+
+
+        } else {
+            this.postBtn.setText("Check ud");
+            this.infoText.setText("Farvel!");
+
+
+
+        }
+        postBtn.setVisibility(View.VISIBLE);
+        afterScanMark.setVisibility(View.VISIBLE);
+
+    }
+
+    private void showCheckInSuccesfullUi() {
+        String infoMsg = "";
+        if(checkType == 0) {
+             infoMsg = "Check ud fuldført!";
+        } else {
+             infoMsg = "Check ud fuldført!";
+
+        }
+        afterScanMark.setVisibility(View.GONE);
+        checkMark.setVisibility(View.VISIBLE);
+        infoText.setText(infoMsg);
+        postBtn.setVisibility(View.GONE);
+        afterScanMark.setVisibility(View.GONE);
+
     }
 
     @Override
     public void onClick(View v) {
 
-        if(v == this.closeButton) {
-            finish();
+        if (v == this.postBtn) {
+            this.postBtn.setEnabled(false);
+            postAttendance();
         }
 
     }
 
+    private int getCheckType(int lessonId) {
+
+        ArrayList<Attendance> attendances = Student.getInstance().getAttendances();
+        int attendanceCounter = 0;
+        if(!attendances.isEmpty()) {
+            for (Attendance a: attendances) {
+                if(a.getLessonId() == lessonId){
+                    attendanceCounter++;
+                }
+            }
+
+            if(attendanceCounter == 1) {
+                return 1;
+            } else if(attendanceCounter == 2) {
+                return -1;
+            }
+        }
+        return 0;
+    }
+
+    private void postAttendance() {
+
+
+        if (!App.instance.isUserSignedIn()) {
+            App.instance.signOut(this);
+            return;
+        }
+
+//        if(this.checkType == 1) {
+//            App.longToast(this, "Du har allerede checket ud");
+//            return;
+//        }
+
+        // Gather body data
+        Token token = App.instance.getTokenFromSharedPrefs();
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        String date = App.getTodaysDate(pattern);
+        String tagId = this.tagId;
+        int studentId = Student.getInstance().getId();
+        int lessonId = this.lessonId;
+        int checkType = this.checkType;
+
+        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.READ_PHONE_STATE},
+                    1
+            );
+            return;
+        }
+        String deviceId = tm.getDeviceId();
+
+
+        Call<Attendance> call = App.instance.getUserClient().checkIn(lessonId, studentId, date, checkType, tagId, deviceId, false, token.getBearerToken());
+
+        call.enqueue(new Callback<Attendance>() {
+            @Override
+            public void onResponse(Call<Attendance> call, Response<Attendance> response) {
+                if (response.isSuccessful()) {
+
+                    showCheckInSuccesfullUi();
+                    Log.i(TAG, "onResponse: (isSuccessful) response.body() = " + response.body());
+                    App.longToast(AttendanceRegistrationActivity.this, "Succes: body = " + response.body());
+                    Student.getInstance().getAttendances().add(response.body());
+
+
+                } else {
+
+                    String errorBodyString = "";
+                    String message = "";
+                    try {
+                        errorBodyString = response.errorBody().string();
+                        Log.i(TAG, "onResponse: (!isSuccessful) response.errorBody() = " + errorBodyString);
+                        message = getMessage(errorBodyString);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    App.longToast(AttendanceRegistrationActivity.this, "Not succes: message = " + message);
+                    showWrongRoomUi("Fejl", message);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Attendance> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage(), t);
+
+                App.longToast(AttendanceRegistrationActivity.this, "Uknown error! (Check maybe connection or API?) " + t.getMessage());
+
+
+                // Stop progessbar
+            }
+        });
+    }
+
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    private String getMessage(String errorBodyString) {
+
+        String m = errorBodyString;
+        m = m.replace("{", "");
+        m = m.replace("}", "");
+        m = m.replace("\n ", "");
+        m = m.replace("\n", "");
+        m = m.replace("\r", "");
+        m = m.replace(":", "");
+        m = m.replace("\"", "");
+        m = m.replace(",", ",\n");
+        m = m.replace(" message ", "");
+
+        return m;
 
     }
 }

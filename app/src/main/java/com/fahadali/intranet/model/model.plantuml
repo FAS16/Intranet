@@ -1,0 +1,313 @@
+@startuml
+
+title __MODEL's Class Diagram__\n
+
+  namespace com.fahadali.intranet {
+    namespace model {
+      class com.fahadali.intranet.model.Attendance {
+          - checkType : int
+          - deviceId : String
+          - id : int
+          - lessonId : int
+          - possibleFraud : boolean
+          - studentId : int
+          - tagId : String
+          - timestamp : String
+          + Attendance()
+          + equals()
+          + getCheckType()
+          + getDeviceId()
+          + getId()
+          + getLessonId()
+          + getStudentId()
+          + getTagId()
+          + getTimestamp()
+          + hashCode()
+          + isPossibleFraud()
+          + setCheckType()
+          + setDeviceId()
+          + setId()
+          + setLessonId()
+          + setPossibleFraud()
+          + setStudentId()
+          + setTagId()
+          + setTimestamp()
+          + toString()
+          # canEqual()
+      }
+    }
+  }
+  
+
+  namespace com.fahadali.intranet {
+    namespace model {
+      class com.fahadali.intranet.model.Class {
+          - courses : ArrayList<Course>
+          - id : int
+          - title : String
+          + Class()
+          + equals()
+          + getCourses()
+          + getCoursesOfTheDay()
+          + getId()
+          + getTitle()
+          + hashCode()
+          + setCourses()
+          + setId()
+          + setTitle()
+          + toString()
+          # canEqual()
+      }
+    }
+  }
+  
+
+  namespace com.fahadali.intranet {
+    namespace model {
+      class com.fahadali.intranet.model.Course {
+          - id : int
+          - lessons : ArrayList<Lesson>
+          - title : String
+          + Course()
+          + equals()
+          + getId()
+          + getLessons()
+          + getTeacher()
+          + getTitle()
+          + hashCode()
+          + setId()
+          + setLessons()
+          + setTeacher()
+          + setTitle()
+          + toString()
+          # canEqual()
+      }
+    }
+  }
+  
+
+  namespace com.fahadali.intranet {
+    namespace model {
+      class com.fahadali.intranet.model.Credentials {
+          - grantType : String
+          - password : String
+          - username : String
+          + Credentials()
+          + Credentials()
+          + equals()
+          + getGrantType()
+          + getPassword()
+          + getUsername()
+          + hashCode()
+          + setGrantType()
+          + setPassword()
+          + setUsername()
+          + toString()
+          # canEqual()
+      }
+    }
+  }
+  
+
+  namespace com.fahadali.intranet {
+    namespace model {
+      class com.fahadali.intranet.model.Lesson {
+          - endTime : String
+          - id : int
+          - startTime : String
+          + Lesson()
+          + equals()
+          + getClassRoom()
+          + getEndTime()
+          + getEndTimeDate()
+          + getId()
+          + getStartTime()
+          + getStartTimeDate()
+          + getWeekday()
+          + hashCode()
+          + setClassRoom()
+          + setEndTime()
+          + setId()
+          + setStartTime()
+          + setWeekday()
+          + toString()
+          # canEqual()
+      }
+    }
+  }
+  
+
+  namespace com.fahadali.intranet {
+    namespace model {
+      class com.fahadali.intranet.model.Room {
+          - id : int
+          - roomIdentifier : String
+          + Room()
+          + equals()
+          + getId()
+          + getRoomIdentifier()
+          + hashCode()
+          + setId()
+          + setRoomIdentifier()
+          + toString()
+          # canEqual()
+      }
+    }
+  }
+  
+
+  namespace com.fahadali.intranet {
+    namespace model {
+      class com.fahadali.intranet.model.Student {
+          {static} - TAG : String
+          - attendances : ArrayList<Attendance>
+          - email : String
+          - id : int
+          {static} - instance : Student
+          - name : String
+          + getAttendances()
+          + getEmail()
+          + getId()
+          {static} + getInstance()
+          + getName()
+          + get_class()
+          + nullify()
+          + setAttendances()
+          + setEmail()
+          + setId()
+          + setName()
+          + setStudent()
+          + set_class()
+          + toString()
+          - Student()
+      }
+    }
+  }
+  
+
+  namespace com.fahadali.intranet {
+    namespace model {
+      class com.fahadali.intranet.model.Subject {
+          - classes : ArrayList<Class>
+          - id : int
+          - note : String
+          - title : String
+          + Subject()
+          + Subject()
+          + equals()
+          + getClasses()
+          + getId()
+          + getNote()
+          + getTitle()
+          + hashCode()
+          + setClasses()
+          + setId()
+          + setNote()
+          + setTitle()
+          + toString()
+          # canEqual()
+      }
+    }
+  }
+  
+
+  namespace com.fahadali.intranet {
+    namespace model {
+      class com.fahadali.intranet.model.Teacher {
+          - email : String
+          - id : int
+          - name : String
+          + Teacher()
+          + equals()
+          + getEmail()
+          + getId()
+          + getName()
+          + hashCode()
+          + setEmail()
+          + setId()
+          + setName()
+          + toString()
+          # canEqual()
+      }
+    }
+  }
+  
+
+  namespace com.fahadali.intranet {
+    namespace model {
+      class com.fahadali.intranet.model.Token {
+          {static} + ACCESS_TOKEN : String
+          {static} + EXPIRES : String
+          {static} + EXPIRES_IN : String
+          {static} + TOKEN_TYPE : String
+          {static} + USERNAME : String
+          - accessToken : String
+          - expires : String
+          - expiresIn : String
+          - tokenType : String
+          - username : String
+          + Token()
+          + Token()
+          + equals()
+          + getAccessToken()
+          + getBearerToken()
+          + getExpires()
+          + getExpiresIn()
+          + getTokenType()
+          + getUsername()
+          + hashCode()
+          + setAccessToken()
+          + setExpires()
+          + setExpiresIn()
+          + setTokenType()
+          + setUsername()
+          + toString()
+          # canEqual()
+      }
+    }
+  }
+  
+
+  namespace com.fahadali.intranet {
+    namespace model {
+      class com.fahadali.intranet.model.Weekday {
+          {static} + Friday : byte
+          {static} + Monday : byte
+          {static} + Saturday : byte
+          {static} + Sunday : byte
+          {static} + Thursday : byte
+          {static} + Tuesday : byte
+          {static} + Wednesday : byte
+          - day : String
+          - id : int
+          - value : int
+          + Weekday()
+          + equals()
+          + getDay()
+          + getId()
+          + getValue()
+          + hashCode()
+          + setDay()
+          + setId()
+          + setValue()
+          + toString()
+          # canEqual()
+      }
+    }
+  }
+  
+
+  com.fahadali.intranet.model.Course o-- com.fahadali.intranet.model.Teacher : teacher
+  com.fahadali.intranet.model.Lesson o-- com.fahadali.intranet.model.Room : classRoom
+  com.fahadali.intranet.model.Lesson o-- com.fahadali.intranet.model.Weekday : weekday
+  com.fahadali.intranet.model.Student o-- com.fahadali.intranet.model.Class : _class
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

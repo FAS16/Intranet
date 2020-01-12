@@ -10,9 +10,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.fahadali.intranet.R;
-import com.fahadali.intranet.model.Subject;
+import com.fahadali.intranet.model.Course;
+import com.fahadali.intranet.model.Student;
+import com.fahadali.intranet.other.App;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,27 +24,24 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder> {
 
     private static final String TAG = "ScheduleAdapter";
-    private ArrayList<Subject> courses;
+    private ArrayList<Course> todaysCourses;
     private Context context;
+    private OnLessonListener onLessonListener;
 
-    public ScheduleAdapter(Context context) {
+    public ScheduleAdapter(Context context, OnLessonListener onLessonListener) {
         this.context = context;
+        this.onLessonListener = onLessonListener;
+        int dayOfWeek = App.getDayOfWeek();
+        todaysCourses = Student.getInstance().get_class().getCoursesOfTheDay(dayOfWeek);
 
-        // Dummy data
-        this.courses = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            String note = "";
-            if(i % 2 == 0) {
 
-                note = "Note omkring kursus "+(i+1);
-
+        Collections.sort(todaysCourses, new Comparator<Course>() {
+            @Override
+            public int compare(Course c1, Course c2) {
+                return c1.getLessons().get(0).getStartTimeDate().compareTo(c2.getLessons().get(0).getStartTimeDate());
             }
-            courses.add(new Subject(
-                    i+1,
-                    "Titel"+(i+1),
-                    note
-                    ));
-        }
+        });
+
     }
 
     // Responsible for inflating the view
@@ -49,7 +50,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(view, onLessonListener);
         return viewHolder;
     }
 
@@ -57,44 +58,64 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: called");
 
-        String title = courses.get(position).getTitle();
-        String note = courses.get(position).getNote();
-        holder.courseTiming.setText(String.format("%s - %s", "10:00", "11:00"));
-        holder.courseTitle.setText(title);
+        Course course = todaysCourses.get(position);
 
-
-        if(!note.trim().isEmpty()) {
-                holder.courseNoteImage.setImageResource(R.drawable.ic_note_green_24dp);
-                note.replace("x", "");
-                holder.coursNote.setText(note);
-
-        }
+            holder.courseTitle.setText(course.getTitle());
+            String timing = course.getLessons().get(0).getStartTime() + " -\n" + course.getLessons().get(0).getEndTime();
+            holder.courseTiming.setText(timing);
+            holder.roomNumber.setText("Lokale " + course.getLessons().get(0).getClassRoom().getId());
+            holder.courseNoteImage.setImageResource(R.drawable.ic_note_green_24dp);
+            holder.nameOfTeacher.setText("Underviser: "+course.getTeacher().getName());
+            holder.lessonId = course.getLessons().get(0).getId();
+            holder.roomId = course.getLessons().get(0).getClassRoom().getRoomIdentifier();
 
     }
 
     @Override
     public int getItemCount() {
-        return courses.size();
+        return todaysCourses.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView courseTiming;
         private TextView courseTitle;
-        private TextView coursNote;
+        private TextView roomNumber;
+        private TextView nameOfTeacher;
         private ImageView courseNoteImage;
+        private int lessonId;
+        private String roomId;
         RelativeLayout parentLayout;
 
-        public ViewHolder(@NonNull View itemView) {
+        OnLessonListener onLessonListener;
+
+        public ViewHolder(@NonNull View itemView, OnLessonListener onLessonListener) {
             super(itemView);
 
+            nameOfTeacher = itemView.findViewById(R.id.nameOfTeacher);
             courseTiming = itemView.findViewById(R.id.courseTiming);
             courseTitle = itemView.findViewById(R.id.courseTitle);
-            coursNote = itemView.findViewById(R.id.courseNote);
+            roomNumber = itemView.findViewById(R.id.roomNumber);
+            nameOfTeacher = itemView.findViewById(R.id.nameOfTeacher);
             courseNoteImage = itemView.findViewById(R.id.courseNoteImage);
             parentLayout = itemView.findViewById(R.id.list_item_layout);
+            lessonId = 0;
+            this.onLessonListener = onLessonListener;
+            itemView.setOnClickListener(this);
 
 
         }
+
+        @Override
+        public void onClick(View view) {
+            App.shortToast(context, "Clicked on lesson with id = " + lessonId);
+            onLessonListener.onLessonClick(lessonId, roomId);
+        }
+    }
+
+    public interface OnLessonListener{
+        void onLessonClick(int lessonId, String roomId);
     }
 }

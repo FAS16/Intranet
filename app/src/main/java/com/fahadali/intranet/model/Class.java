@@ -1,60 +1,40 @@
 package com.fahadali.intranet.model;
 
-import java.time.LocalDateTime;
 
+import java.lang.reflect.Array;
+import java.util.AbstractList;
+import java.util.ArrayList;
+
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
+@Data @RequiredArgsConstructor
 public class Class {
 
     private int id;
-    private String start;
-    private String end;
-    public boolean checkedIn;
-    public boolean checkedOut;
+    private String title;
+    private ArrayList<Course> courses;
 
-    public Class(int id, String start, String end, boolean checkedIn, boolean checkedOut) {
-        this.id = id;
-        this.start = start;
-        this.end = end;
-        this.checkedIn = checkedIn;
-        this.checkedOut = checkedOut;
-    }
+    public ArrayList<Course> getCoursesOfTheDay(int dayOfWeek) {
+         ArrayList<Course> todaysCourses = new ArrayList<>();
 
-    public int getId() {
-        return id;
-    }
+        for (Course course: courses) {
+            for(Lesson lesson: course.getLessons()) {
+                if(lesson.getWeekday().getValue() == dayOfWeek+1) { //TODO: Remove the -3.
+                    Course c = new Course();
+                    ArrayList<Lesson> ls = new ArrayList<>();
+                    ls.add(lesson);
+                    c.setLessons(ls);
+                    c.setId(course.getId());
+                    c.setTeacher(course.getTeacher());
+                    c.setTitle(course.getTitle());
+                    todaysCourses.add(c);
+                }
+            }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+        }
 
-    public String getStart() {
-        return start;
-    }
-
-    public void setStart(String start) {
-        this.start = start;
-    }
-
-    public String getEnd() {
-        return end;
-    }
-
-    public void setEnd(String end) {
-        this.end = end;
-    }
-
-    public boolean isCheckedIn() {
-        return checkedIn;
-    }
-
-    public void setCheckedIn(boolean checkedIn) {
-        this.checkedIn = checkedIn;
-    }
-
-    public boolean isCheckedOut() {
-        return checkedOut;
-    }
-
-    public void setCheckedOut(boolean checkedOut) {
-        this.checkedOut = checkedOut;
+        return todaysCourses;
     }
 }
+

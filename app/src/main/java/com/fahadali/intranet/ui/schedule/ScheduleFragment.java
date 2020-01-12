@@ -23,7 +23,7 @@ public class ScheduleFragment extends Fragment {
         scheduleViewModel = ViewModelProviders.of(this).get(ScheduleViewModel.class);
         View root = inflater.inflate(R.layout.fragment_schedule, container, false);
         dateButton = root.findViewById(R.id.dateButton);
-        dateButton.setText(String.format("MAN %s", App.getTodaysDate()));
+        dateButton.setText(App.getTodaysDate());
 
         Fragment dayScheduleFragment = new DayScheduleFragment();
         getFragmentManager().beginTransaction()
@@ -47,10 +47,3 @@ public class ScheduleFragment extends Fragment {
 
 
 
-//        final TextView textView = root.findViewById(R.id.text_home);
-//        homeViewModel.getText().observe(this, new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });

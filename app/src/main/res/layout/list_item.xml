@@ -24,7 +24,7 @@
         android:layout_toRightOf="@+id/courseTiming"></TextView>
 
     <TextView
-        android:id="@+id/courseId"
+        android:id="@+id/nameOfTeacher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Course id"
@@ -33,13 +33,13 @@
         android:layout_below="@+id/courseTitle"></TextView>
 
     <TextView
-        android:id="@+id/courseNote"
+        android:id="@+id/roomNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Note about the class"
         android:layout_marginLeft="8dp"
         android:layout_toRightOf="@+id/courseTiming"
-        android:layout_below="@+id/courseId"></TextView>
+        android:layout_below="@+id/nameOfTeacher"></TextView>
 
     <ImageView
         android:id="@+id/courseNoteImage"

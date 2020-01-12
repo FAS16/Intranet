@@ -3,136 +3,147 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
 
     >
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/textt_home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:background="@color/colorPrimary">
+        android:layout_marginTop="100dp"
+        android:text="Skolens nyheder og \nmeddelelser kan vises her..."
+        android:textAlignment="center"
+        android:textSize="20sp"
+        />
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="top"-->
+<!--        android:background="@color/colorPrimary">-->
 
 
-        <TextView
-            android:id="@+id/nextClass"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_marginLeft="8dp"
-            android:fontFamily="@font/open_sans"
-            android:padding="8dp"
-            android:text="NÆSTE:"
-            android:textColor="@color/white"
-            tools:layout_editor_absoluteX="77dp"
-            tools:layout_editor_absoluteY="231dp" />
+<!--        <TextView-->
+<!--            android:id="@+id/nextClass"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="left"-->
+<!--            android:layout_marginLeft="8dp"-->
+<!--            android:fontFamily="@font/open_sans"-->
+<!--            android:padding="8dp"-->
+<!--            android:text="NÆSTE:"-->
+<!--            android:textColor="@color/white"-->
+<!--            tools:layout_editor_absoluteX="77dp"-->
+<!--            tools:layout_editor_absoluteY="231dp" />-->
 
-    </LinearLayout>
-
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/list_item_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="6dp">
-
-        <TextView
-            android:id="@+id/courseTiming"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:fontFamily="@font/open_sans_bold"
-            android:padding="8dp"
-            android:text="00:00 - 00:00"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/courseTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@+id/courseTiming"
-            android:fontFamily="@font/open_sans"
-            android:text="Title of course" />
-
-        <TextView
-            android:id="@+id/courseId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/courseTitle"
-            android:layout_marginStart="8dp"
-            android:layout_toEndOf="@+id/courseTiming"
-            android:fontFamily="@font/open_sans"
-            android:text="Course id" />
-
-        <TextView
-            android:id="@+id/courseNote"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/courseId"
-            android:layout_marginStart="8dp"
-            android:layout_toEndOf="@+id/courseTiming"
-            android:fontFamily="@font/open_sans"
-            android:text="Note about the class" />
-
-        <ImageView
-            android:id="@+id/courseNoteImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="30dp"
-            android:src="@drawable/ic_note_gray_24dp" />
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+<!--    </LinearLayout>-->
 
 
-    </LinearLayout>
+<!--    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--        android:id="@+id/list_item_layout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        android:padding="6dp">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/courseTiming"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:fontFamily="@font/open_sans_bold"-->
+<!--            android:padding="8dp"-->
+<!--            android:text="00:00 - 00:00"-->
+<!--            android:textStyle="bold" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/courseTitle"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginLeft="8dp"-->
+<!--            android:layout_toRightOf="@+id/courseTiming"-->
+<!--            android:fontFamily="@font/open_sans"-->
+<!--            android:text="Title of course" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/nameOfTeacher"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@+id/courseTitle"-->
+<!--            android:layout_marginStart="8dp"-->
+<!--            android:layout_toEndOf="@+id/courseTiming"-->
+<!--            android:fontFamily="@font/open_sans"-->
+<!--            android:text="Course id" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/roomNumber"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@+id/nameOfTeacher"-->
+<!--            android:layout_marginStart="8dp"-->
+<!--            android:layout_toEndOf="@+id/courseTiming"-->
+<!--            android:fontFamily="@font/open_sans"-->
+<!--            android:text="Note about the class" />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/courseNoteImage"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentRight="true"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:layout_marginRight="30dp"-->
+<!--            android:src="@drawable/ic_note_gray_24dp" />-->
+<!--    </RelativeLayout>-->
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal">-->
 
 
-    <Button
-        android:id="@+id/registrationButton"
-        android:layout_width="200dp"
-        android:layout_height="60dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="128dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:fontFamily="@font/open_sans_bold"
-        android:src="@drawable/ic_speaker_phone_black_24dp"
-        android:text="Check ind"
-        android:textColor="@color/white"
-        android:textSize="20dp"
-        tools:layout_editor_absoluteX="133dp"
-        tools:layout_editor_absoluteY="352dp" />
+<!--    </LinearLayout>-->
 
 
-    <Button
-        android:id="@+id/send_request"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Send request"></Button>
+<!--    <Button-->
+<!--        android:id="@+id/registrationButton"-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="60dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:layout_marginTop="128dp"-->
+<!--        android:backgroundTint="@color/colorPrimary"-->
+<!--        android:fontFamily="@font/open_sans_bold"-->
+<!--        android:src="@drawable/ic_speaker_phone_black_24dp"-->
+<!--        android:text="Check ind"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="20dp"-->
+<!--        tools:layout_editor_absoluteX="133dp"-->
+<!--        tools:layout_editor_absoluteY="352dp" />-->
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/okHttp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/open_sans"
-            android:text="okHttp" />
+<!--    <Button-->
+<!--        android:id="@+id/send_request"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:text="Send request"></Button>-->
 
-    </androidx.core.widget.NestedScrollView>
+<!--    <androidx.core.widget.NestedScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/okHttp"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginStart="8dp"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:fontFamily="@font/open_sans"-->
+<!--            android:text="okHttp" />-->
+
+<!--    </androidx.core.widget.NestedScrollView>-->
 
 
 </LinearLayout>

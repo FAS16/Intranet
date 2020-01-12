@@ -1,51 +1,56 @@
 package com.fahadali.intranet.model;
 
+import android.util.Log;
+
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter @Setter
+@ToString
 public class Student {
 
+    private static final String TAG = "Student";
+    private static Student instance;
     private int id;
     private String name;
-    private ArrayList<Subject> enrolledSubjects;
+    private String email;
+    @SerializedName("class")
+    private Class _class;
+    private ArrayList<Attendance> attendances;
 
+    private Student() {
+        if(attendances == null) {
+            attendances = new ArrayList<>();
+        }
 
-    public Student(int id, String name, ArrayList<Subject> enrolledSubjects) {
-        this.id = id;
-        this.name = name;
-        this.enrolledSubjects = enrolledSubjects;
     }
 
-    @Override
-    public String toString() {
-        return "Student{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", enrolledSubjects=" + enrolledSubjects +
-                '}';
+    public static Student getInstance() {
+        if(instance == null) {
+            instance = new Student();
+            Log.i(TAG, "getInstance: New user has been initialized");
+        }
+
+        return instance;
     }
 
-    public int getId() {
-        return id;
+    public void setStudent(Student student){
+        setId(student.id);
+        setName(student.name);
+        setEmail(student.email);
+        set_class(student._class);
+        setAttendances(student.attendances);
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
-    public String getName() {
-        return name;
-    }
+    public void nullify() {
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public ArrayList<Subject> getEnrolledSubjects() {
-        return enrolledSubjects;
-    }
-
-    public void setEnrolledSubjects(ArrayList<Subject> enrolledSubjects) {
-        this.enrolledSubjects = enrolledSubjects;
+        instance = null;
     }
 }
 

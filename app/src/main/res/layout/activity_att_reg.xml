@@ -10,7 +10,6 @@
     android:orientation="vertical"
     >
 
-
     <TextView
         android:id="@+id/readChipText"
         android:layout_width="wrap_content"
@@ -19,7 +18,23 @@
         android:text="Læs lokalets chip"
         android:textSize="24dp"
         android:layout_marginBottom="30dp"></TextView>
+    <TextView
+        android:id="@+id/tagContentTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/open_sans_bold"
+        android:textStyle="bold" />
 
+    <ImageView
+        android:id="@+id/crossMark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_error_outline_black_24dp"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" />
 
     <ImageView
         android:id="@+id/checkMark"
@@ -27,45 +42,60 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_check_green_100dp"
         android:visibility="gone"
-        android:layout_marginBottom="10dp"></ImageView>
+        android:layout_marginBottom="10dp" />
+
+    <ImageView
+        android:id="@+id/afterScanMark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_arrow_downward_orange_100dp"
+        android:visibility="gone"
+        android:layout_marginBottom="10dp" />
 
     <com.github.ybq.android.spinkit.SpinKitView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/spin_kit"
         style="@style/SpinKitView.Large.Pulse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:layout_gravity="center"
         app:SpinKit_Color="@android:color/darker_gray"
         android:layout_marginBottom="10dp"/>
 
 
-    <TextView
-        android:id="@+id/tagContentTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:fontFamily="@font/open_sans_bold"
-        android:textStyle="bold" />
+
 
     <TextView
         android:id="@+id/readNotification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/open_sans"
+        android:textAlignment="center"
         android:text=""
         android:layout_marginBottom="10dp"></TextView>
 
-
     <Button
-        android:id="@+id/closeDialog"
+        android:id="@+id/checkInBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Luk"
+        android:text="Check ind"
         android:backgroundTint="@color/colorPrimary"
         android:textColor="@color/white"
         android:layout_marginBottom="20dp"
+        android:visibility="gone"
         ></Button>
+
+    <Button
+        android:id="@+id/checkOutBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check out"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"
+        ></Button>
+
 
 
 
