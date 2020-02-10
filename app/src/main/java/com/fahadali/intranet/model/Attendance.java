@@ -10,6 +10,7 @@ public class Attendance {
 
     private int id;
     private int lessonId;
+    private Lesson lesson;
     private int studentId;
     private String timestamp;
     private int checkType;

@@ -9,23 +9,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
-
 import com.fahadali.intranet.R;
-import com.fahadali.intranet.clients.UserClient;
 import com.fahadali.intranet.model.Student;
 import com.fahadali.intranet.model.Token;
 import com.fahadali.intranet.other.App;
-
-
-
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -34,6 +26,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String TAG = "LoginActivity";
     private Token token;
     private ProgressBar progressBar;
+    private ImageView logo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +39,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         progressBar = findViewById(R.id.login_pbar);
         loginBtn = findViewById(R.id.login_btn);
         loginBtn.setOnClickListener(this);
+        logo = findViewById(R.id.ulogo);
+        logo.setOnClickListener(this);
 
 
 
@@ -68,19 +63,34 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             progressBar.setVisibility(View.VISIBLE);
             if(App.isOnline()) {
                 // Login - Retrieve token
-                retrieveToken();
-                progressBar.setVisibility(View.INVISIBLE);
+
+                if(this.username.getText().toString().trim().isEmpty()) {
+                    retrieveToken("fahad@elev.dk", "Baba123.");
+                } else {
+                    retrieveToken(this.username.getText().toString(), this.password.getText().toString());
+                }
+
+
+            } else {
+                App.shortToast(this, "Du er offline!");
+
+            }
+        }
+
+
+        if(view == logo) {
+            progressBar.setVisibility(View.VISIBLE);
+            if(App.isOnline()) {
+                // Login - Retrieve token
+                retrieveToken("jp@elev.dk", "Baba123.");
 
 
             } else {
                 App.shortToast(this, "Du er offline!");
                 progressBar.setVisibility(View.INVISIBLE);
 
-
             }
-
         }
-
     }
 
     public void manageToken(final Token token) {
@@ -89,7 +99,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             // Save in sharedprefs
             saveTokenLocally(token);
 
-            // TODO: Get user data
+            // Get user data
             retrieveStudentData(token);
 
 
@@ -116,13 +126,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     startActivity(intent);
                     finish();
 
-                } else {
+                } else if(response.code() == 404) {
+                    App.instance.signOut(LoginActivity.this);
+                }
+                else {
                     App.longToast(LoginActivity.this, "Error code: " + response.code());
-                    Log.i(TAG, "onResponse: Response not successful. Code = " + response.body());
+                    Log.i(TAG, "onResponse: Response not successful. Code = " + response.code());
 
 
                 }
-                progressBar.setVisibility(View.INVISIBLE);
 
 
             }
@@ -130,16 +142,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onFailure(Call<Student> call, Throwable t) {
                 App.longToast(LoginActivity.this, "Failed to retrieve student data. Message: " + t.getMessage());
-                progressBar.setVisibility(View.INVISIBLE);
 
             }
         });
     }
 
-    private void retrieveToken() {
+    private void retrieveToken(String un, String pwd) {
 
-        this.username.setText("fahad@elev.dk");
-        this.password.setText("Baba123.");
+        this.username.setText(un);
+        this.password.setText(pwd);
 
         String username = this.username.getText().toString().trim();
         String password = this.password.getText().toString().trim();
@@ -153,10 +164,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     manageToken(token);
 
                     Log.i(TAG, "onResponse: (isSuccessful) = " + token.getAccessToken());
-                    App.longToast(LoginActivity.this, "response = "+ response.toString());
+                    App.longToast(LoginActivity.this, "Login response = "+ response.code());
                 } else {
                     Log.e(TAG, "onResponse: (!isSuccessful) = " + response.errorBody());
-                    App.longToast(LoginActivity.this,"HTTP status code = " + response.body());
+                    App.longToast(LoginActivity.this,"HTTP status code = " + response.code());
 
                 }
 
@@ -168,7 +179,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 App.longToast(LoginActivity.this, "Uknown error! (Check maybe connection or API?) "+t.getMessage());
                 Log.e(TAG, "onFailure: " + t.getMessage(),t);
-                progressBar.setVisibility(View.INVISIBLE);
 
             }
         });

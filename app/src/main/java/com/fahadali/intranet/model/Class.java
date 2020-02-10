@@ -20,7 +20,7 @@ public class Class {
 
         for (Course course: courses) {
             for(Lesson lesson: course.getLessons()) {
-                if(lesson.getWeekday().getValue() == dayOfWeek+1) { //TODO: Remove the -3.
+                if(lesson.getWeekday().getValue() == dayOfWeek) { //TODO: Remove the -3.
                     Course c = new Course();
                     ArrayList<Lesson> ls = new ArrayList<>();
                     ls.add(lesson);

@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/list_item_layout"
+    android:id="@+id/list_item_ov_layout"
     android:padding="6dp">
 
     <TextView
@@ -12,40 +12,47 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:padding="8dp"
-        android:text="00:00 - 00:00"
+        android:text="Fag"
         android:textStyle="bold"></TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:text="Tidspunkt for registrering"
+        android:layout_above="@+id/timeOfRegistration"
+        android:layout_toLeftOf="@+id/checkTypeImage"></TextView>
 
     <TextView
         android:id="@+id/timeOfRegistration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:text="Title of course"
-        android:layout_toRightOf="@+id/course_name"></TextView>
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/checkTypeImage"
+        android:text="Tidspunkt for registrering"></TextView>
 
     <TextView
         android:id="@+id/lectureStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Course id"
-        android:layout_marginLeft="8dp"
-        android:layout_toRightOf="@+id/course_name"
+        android:text="Lektion start"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/checkTypeImage"
         android:layout_below="@+id/timeOfRegistration"></TextView>
 
     <TextView
         android:id="@+id/lectureEnd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Note about the class"
-        android:layout_marginLeft="8dp"
-        android:layout_toRightOf="@+id/course_name"
+        android:text="Lektion slut"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/checkTypeImage"
         android:layout_below="@+id/lectureStart"></TextView>
 
     <ImageView
         android:id="@+id/checkTypeImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_note_gray_24dp"
+        android:src="@drawable/ic_check_in_24dp"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="30dp"></ImageView>

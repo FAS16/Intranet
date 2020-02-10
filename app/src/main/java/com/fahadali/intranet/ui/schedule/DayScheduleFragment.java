@@ -18,11 +18,16 @@ import android.widget.TextView;
 import com.fahadali.intranet.R;
 import com.fahadali.intranet.activities.AttendanceRegistrationActivity;
 import com.fahadali.intranet.model.Student;
+import com.fahadali.intranet.model.Token;
 import com.fahadali.intranet.other.App;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,6 +82,38 @@ public class DayScheduleFragment extends Fragment implements ScheduleAdapter.OnL
         bundle.putString("roomId", roomId);
         i.putExtras(bundle);
         startActivity(i);
+    }
 
+    private void retrieveStudentData(Token token) {
+
+        Call<Student> call = App.instance.getUserClient().getStudent(token.getUsername(), token.getBearerToken());
+
+        call.enqueue(new Callback<Student>() {
+            @Override
+            public void onResponse(Call<Student> call, Response<Student> response) {
+                if(response.isSuccessful()) {
+                    Student s = response.body();
+
+                    Student.getInstance().setStudent(s);
+
+                    Log.i(TAG, "onResponse: Student retrieved = " + Student.getInstance().toString());
+
+
+
+                }
+                else {
+                    Log.i(TAG, "onResponse: Response not successful. Code = " + response.body());
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<Student> call, Throwable t) {
+                Log.e(TAG, "onFailure: Failed to retrieve student data. Message = " + t.getMessage());
+
+
+            }
+        });
     }
 }

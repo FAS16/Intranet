@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Intranet</string>
+    <string name="app_name">Attendance</string>
     <string name="title_timetable">Skema</string>
     <string name="title_scan">Scan</string>
     <string name="title_overview">Oversigt</string>

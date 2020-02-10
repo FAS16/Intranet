@@ -2,9 +2,11 @@ package com.fahadali.intranet.clients;
 
 import com.fahadali.intranet.model.Attendance;
 import com.fahadali.intranet.model.Credentials;
+import com.fahadali.intranet.model.Room;
 import com.fahadali.intranet.model.Student;
 import com.fahadali.intranet.model.Token;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import okhttp3.Response;
@@ -29,6 +31,9 @@ public interface UserClient {
 
     @GET("api/students/{email}/")
     Call<Student> getStudent(@Path("email") String email, @Header("Authorization") String authHeader);
+
+    @GET("api/rooms")
+    Call<ArrayList<Room>> getRooms(@Header("Authorization") String authHeader);
 
     @FormUrlEncoded
     @POST("api/attendances")

@@ -25,10 +25,12 @@ import android.widget.TextView;
 
 import com.fahadali.intranet.R;
 import com.fahadali.intranet.model.Attendance;
+import com.fahadali.intranet.model.Room;
 import com.fahadali.intranet.model.Student;
 import com.fahadali.intranet.model.Token;
 import com.fahadali.intranet.other.App;
 import com.github.ybq.android.spinkit.SpinKitView;
+
 import android.telephony.TelephonyManager;
 
 
@@ -61,6 +63,7 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
     private int lessonId;
     private String roomId;
     private int checkType;
+    private ArrayList<Room> rooms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,8 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
         Log.d(TAG, "onCreate: called...");
         setTitle("");
 
+        rooms = new ArrayList<>();
+        retrieveAllRooms(App.instance.getTokenFromSharedPrefs());
         tagContentTextView = findViewById(R.id.tagContentTextView);
         spinKitBeforeCheckIn = findViewById(R.id.spin_kit);
         checkMark = findViewById(R.id.checkMark);
@@ -86,11 +91,10 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
         roomId = getIntent().getExtras().getString("roomId");
         checkType = getCheckType(lessonId);
 
-        if(checkType == -1) {
+        if (checkType == -1) {
             App.longToast(this, "Du har allerede registreret for denne lektion");
             finish();
         }
-
 
     }
 
@@ -130,7 +134,7 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
 
                 Parcelable[] parcelables =
                         intent
-                        .getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+                                .getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 
                 if (parcelables != null && parcelables.length > 0) {
 
@@ -143,17 +147,22 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
                     validateRoom(tagId, roomId);
                     if (tagId.equals(roomId)) {
                         showCorrectRoomUi();
+                    } else if (!this.rooms.isEmpty() && !getRoomIdentifiers(this.rooms).contains(tagId)) {
+                            showWrongRoomUi("Ukendt klasselokale", "");
                     } else {
                         // User is at the wrong room
                         showWrongRoomUi("Du skal ikke være her", "");
                     }
 
-                } else {
-                    Log.i(TAG, "onNewIntent: No NDEF messages found...");
                 }
+
+            } else {
+                Log.i(TAG, "onNewIntent: No NDEF messages found...");
             }
         }
     }
+
+
 
     private void showWrongRoomUi(String header, String text) {
 
@@ -276,7 +285,6 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
     private NdefMessage createNdefMessage(String content) {
 
         NdefRecord ndefRecord = NdefRecord.createTextRecord("en", content);
-
         NdefMessage ndefMessage = new NdefMessage(new NdefRecord[]{ndefRecord});
 
         return ndefMessage;
@@ -304,7 +312,7 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
 
     private void showCorrectRoomUi() {
         this.spinKitBeforeCheckIn.setVisibility(View.GONE);
-        if(checkType == 0) {
+        if (checkType == 0) {
             this.postBtn.setText("Check ind");
             this.infoText.setText("Velkommen!");
 
@@ -312,7 +320,6 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
         } else {
             this.postBtn.setText("Check ud");
             this.infoText.setText("Farvel!");
-
 
 
         }
@@ -323,10 +330,10 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
 
     private void showCheckInSuccesfullUi() {
         String infoMsg = "";
-        if(checkType == 0) {
-             infoMsg = "Check ud fuldført!";
+        if (checkType == 0) {
+            infoMsg = "Check ind fuldført!";
         } else {
-             infoMsg = "Check ud fuldført!";
+            infoMsg = "Check ud fuldført!";
 
         }
         afterScanMark.setVisibility(View.GONE);
@@ -351,16 +358,16 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
 
         ArrayList<Attendance> attendances = Student.getInstance().getAttendances();
         int attendanceCounter = 0;
-        if(!attendances.isEmpty()) {
-            for (Attendance a: attendances) {
-                if(a.getLessonId() == lessonId){
+        if (!attendances.isEmpty()) {
+            for (Attendance a : attendances) {
+                if (a.getLessonId() == lessonId) {
                     attendanceCounter++;
                 }
             }
 
-            if(attendanceCounter == 1) {
+            if (attendanceCounter == 1) {
                 return 1;
-            } else if(attendanceCounter == 2) {
+            } else if (attendanceCounter == 2) {
                 return -1;
             }
         }
@@ -465,5 +472,53 @@ public class AttendanceRegistrationActivity extends AppCompatActivity implements
 
         return m;
 
+    }
+
+    private void retrieveAllRooms(Token token) {
+
+        Call<ArrayList<Room>> call = App.instance.getUserClient().getRooms(App.instance.getTokenFromSharedPrefs().getBearerToken());
+
+
+        call.enqueue(new Callback<ArrayList<Room>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Room>> call, Response<ArrayList<Room>> response) {
+                if (response.isSuccessful()) {
+                    setRoomsList(response.body());
+
+                    App.shortToast(AttendanceRegistrationActivity.this, "Retrieved rooms from backend!");
+                    Log.i(TAG, "onResponse: Rooms retrieved = " + Student.getInstance().toString());
+
+                } else {
+                    App.longToast(AttendanceRegistrationActivity.this, "Error code: " + response.code());
+                    Log.i(TAG, "onResponse: Response not successful. Code = " + response.body());
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Room>> call, Throwable t) {
+                App.longToast(AttendanceRegistrationActivity.this, "Failed to retrieve room data. Message: " + t.getMessage());
+
+            }
+        });
+
+    }
+
+    private void setRoomsList(ArrayList<Room> rooms) {
+
+        this.rooms = rooms;
+    }
+
+    private ArrayList<String> getRoomIdentifiers(ArrayList<Room> rooms) {
+
+        ArrayList<String> roomIdentifiers = new ArrayList<>();
+
+        for (Room room : rooms) {
+
+            roomIdentifiers.add(room.getRoomIdentifier());
+
+        }
+
+        return roomIdentifiers;
     }
 }

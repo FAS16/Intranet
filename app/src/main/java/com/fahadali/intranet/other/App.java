@@ -93,6 +93,32 @@ public class App extends Application {
         return dateString;
     }
 
+
+    public static String formatDate(Date date) {
+
+
+        SimpleDateFormat format = new SimpleDateFormat("EEE HH:mm:ss");
+        format.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+        String newDateString = format.format(date);
+
+        return newDateString;
+    }
+
+    public static String formatDateString(String dateString) {
+        Date date = null;
+        try {
+            date = new SimpleDateFormat("yyyy-MM-ddTHH:mm:ss").parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat format = new SimpleDateFormat("EEE dd-MM-yyyy HH:mm:ss");
+        format.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+        String newDateString = format.format(date);
+
+        return newDateString;
+    }
+
+
     public static String getTodaysDate(String formatString) {
 //        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss", Locale.ENGLISH);
 

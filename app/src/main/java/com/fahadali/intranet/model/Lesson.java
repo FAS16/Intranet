@@ -14,6 +14,7 @@ public class Lesson {
     private String endTime;
     private Weekday weekday;
     private Room classRoom;
+    private Course course;
 
     public Date getStartTimeDate(){
         Date date = null;

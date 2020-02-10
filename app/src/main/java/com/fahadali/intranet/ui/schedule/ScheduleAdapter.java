@@ -94,23 +94,21 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         public ViewHolder(@NonNull View itemView, OnLessonListener onLessonListener) {
             super(itemView);
 
-            nameOfTeacher = itemView.findViewById(R.id.nameOfTeacher);
-            courseTiming = itemView.findViewById(R.id.courseTiming);
-            courseTitle = itemView.findViewById(R.id.courseTitle);
-            roomNumber = itemView.findViewById(R.id.roomNumber);
-            nameOfTeacher = itemView.findViewById(R.id.nameOfTeacher);
-            courseNoteImage = itemView.findViewById(R.id.courseNoteImage);
+            nameOfTeacher = itemView.findViewById(R.id.lectureStart);
+            courseTiming = itemView.findViewById(R.id.course_name);
+            courseTitle = itemView.findViewById(R.id.timeOfRegistration);
+            roomNumber = itemView.findViewById(R.id.lectureEnd);
+            nameOfTeacher = itemView.findViewById(R.id.lectureStart);
+            courseNoteImage = itemView.findViewById(R.id.checkTypeImage);
             parentLayout = itemView.findViewById(R.id.list_item_layout);
             lessonId = 0;
             this.onLessonListener = onLessonListener;
             itemView.setOnClickListener(this);
 
-
         }
 
         @Override
         public void onClick(View view) {
-            App.shortToast(context, "Clicked on lesson with id = " + lessonId);
             onLessonListener.onLessonClick(lessonId, roomId);
         }
     }
